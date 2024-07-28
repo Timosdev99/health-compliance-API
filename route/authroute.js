@@ -117,6 +117,28 @@ Router.get('/GetAllUserbyId', async(req, res ) => {
     }
 })
         
+Router.post('/changepassword', async(req, res) => {
+    const {_id, current_password} = req.body
+    try {
+        const user = await user.findById(_id)
+        const passmatch = bcrypt.compare(current_password, user.password)
+        if(!passmatch){
+            res.status(500).json({
+                message: "invalid password"
+            })
+        }
+
+        const newpassword = req.body 
+        user.password = newpassword
+      await  user.save()
+
+    } catch (err) {
+        res.status(500).json({
+            message: err.message
+        })
+    }
+})
+
 Router.post('/sendotp', async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000);
     const { email } = req.body;
@@ -162,7 +184,7 @@ Router.post('/sendotp', async (req, res) => {
     }
 });
 
-Router.post('/changepassword', async (req, res) => {
+Router.post('/forgottenpassword', async (req, res) => {
     const {email , otp , newpassword} = req.body;
     try {
           const user = await user.findOne({ email });

@@ -7,6 +7,7 @@ const auth = require('../middleware/auth')
 
 
 
+
 Router.post('/report', auth, async(req, res) => {
       try {
        const { name, complain, location} = req.body
@@ -30,6 +31,31 @@ Router.post('/report', auth, async(req, res) => {
       }
 })
 
+
+Router.patch('/update-report', async(req, res) => {
+  try {
+    const {_id} = req.body
+    const updateincident = await incident.findById(_id)
+    if(!updateincident) {
+      res.status(500).json({
+        message: "incident record not found"
+      })
+    }
+    const { name, complain, location} = req.body
+    updateincident ({
+      name: name,
+      complain: complain,
+      location: location,
+      
+    })
+    await updateincident.save()
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({
+      message: 'an error occur'
+    })
+  }
+})
 
 Router.get('/getincident', auth, async(req, res) => {
   try {
@@ -56,6 +82,24 @@ res.status(200).json({
 })
 
 
-Router.get('getincidentbyid')
+Router.get('getincidentbyid', async(req, res) => {
+  try {
+    const _id = req.body
+    const userbyid = await user.findById(_id)
+      
+    res.status(200).json({
+        message: "All User gotten succesfuly",
+       userbyid,
+      
+    })
+
+    
+} catch (err) {
+  console.log(err)
+    res.status(500).json({
+        message: "unable to get incident"
+    })
+}
+})
 
 module.exports = Router
