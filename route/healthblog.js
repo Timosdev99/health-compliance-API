@@ -17,7 +17,7 @@ router.post('/', auth, async (req, res) => {
          res.status(400).send({error: err});
    }
 });
-
+   
 // Get all blogs
 router.get('/', async (req, res) => {
   try {

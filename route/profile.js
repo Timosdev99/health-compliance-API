@@ -71,7 +71,7 @@ const Router = express.Router()
           return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
         }
   
-          existingUser.profilePic = result.secure_url;
+          existingUser.blogpic = result.secure_url;
   
           await existingUser.save();
       res.json({ imageUrl: result.url, message: 'Profile picture uploaded successfully'});
